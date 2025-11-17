@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Care-Pro — Report Dashboard</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f3f8ff;
+    --card:#ffffff;
+    --accent:#6aa9ff;       /* light blue */
+    --accent-2:#3b82f6;     /* stronger blue */
+    --muted:#6b7280;        /* gray */
+    --shadow: 0 8px 30px rgba(30,60,120,0.06);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+    background: linear-gradient(180deg, var(--bg), #eef6ff);
+    color:#0f172a;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* HEADER */
+  header{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:18px 22px;
+    background:linear-gradient(90deg, rgba(255,255,255,0.45), rgba(255,255,255,0.3));
+    border-bottom: 1px solid rgba(60,110,200,0.06);
+    position:sticky;
+    top:0;
+    z-index:40;
+    backdrop-filter: blur(6px);
+  }
+  .logo-wrap{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:68px;
+    height:68px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+    box-shadow: 0 6px 18px rgba(20,70,160,0.08);
+    overflow:hidden;
+  }
+  .logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    transform-origin:center;
+    animation:breath 3.4s ease-in-out infinite;
+  }
+  @keyframes breath{
+    0%   { transform: scale(1); filter: drop-shadow(0 6px 10px rgba(59,130,246,0.12)); opacity:1;}
+    50%  { transform: scale(1.06); filter: drop-shadow(0 18px 30px rgba(59,130,246,0.14)); opacity:0.98;}
+    100% { transform: scale(1); filter: drop-shadow(0 6px 10px rgba(59,130,246,0.12)); opacity:1;}
+  }
+
+  .title {
+    display:flex;
+    flex-direction:column;
+  }
+  .title h1{margin:0;font-size:18px;letter-spacing:0.1px}
+  .title p{margin:2px 0 0 0;color:var(--muted);font-size:13px}
+
+  .header-actions{
+    margin-left:auto;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .btn{
+    border:0;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+    background:var(--accent-2);
+    color:white;
+    box-shadow: 0 6px 20px rgba(59,130,246,0.12);
+  }
+  .btn.ghost{
+    background:transparent;
+    color:var(--accent-2);
+    border:1px solid rgba(59,130,246,0.12);
+    box-shadow:none;
+    font-weight:600;
+  }
+
+  /* LAYOUT */
+  .container{
+    max-width:1160px;
+    margin:20px auto;
+    padding:16px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 340px;
+    gap:18px;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow: var(--shadow);
+  }
+
+  .tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .tab{
+    padding:8px 12px;
+    border-radius:10px;
+    background:linear-gradient(180deg,#ffffff,#f7fbff);
+    border:1px solid rgba(15,30,60,0.04);
+    cursor:pointer;
+    font-weight:600;
+    color:var(--muted);
+    transition: all .18s ease;
+  }
+  .tab.active{
+    color:#fff;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    box-shadow: 0 8px 22px rgba(59,130,246,0.14);
+    transform:translateY(-2px);
+  }
+
+  .frame-wrap{ height:64vh; overflow:hidden; border-radius:10px; border:1px solid rgba(10,20,40,0.03) }
+  iframe{ width:100%; height:100%; border:0; display:block; }
+
+  .download-row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-top:12px;
+  }
+  .small{ color:var(--muted); font-size:13px }
+
+  /* SIDE */
+  aside .card h3{ margin:0 0 8px 0 }
+  .links{ display:flex; flex-direction:column; gap:10px }
+  .links a{
+    padding:10px 12px;
+    border-radius:10px;
+    background:#f5f8ff;
+    color:var(--accent-2);
+    text-decoration:none;
+    font-weight:600;
+    border:1px solid rgba(60,120,220,0.06);
+  }
+
+  footer{ text-align:center; padding:28px 6px; color:var(--muted); font-size:13px; }
+
+  /* Responsive */
+  @media (max-width:980px){
+    .grid{ grid-template-columns: 1fr; }
+    .frame-wrap{ height:56vh; }
+    .header-actions{ display:none; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo-wrap">
+      <div class="logo">
+        <!-- breathing logo -->
+        <img src="https://i.ibb.co/N0Bdr5N/Care-Pro-Logo-Jan-2025-Transparent.png" alt="Care-Pro Logo">
+      </div>
+      <div class="title">
+        <h1>Care-Pro — Report Dashboard</h1>
+        <p class="small">Summary & Quarter reports — public view</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Download full XLSX (Option A) -->
+      <a class="btn" id="downloadXlsx" href="https://docs.google.com/spreadsheets/d/1vP4wZd4hJ9rULHmAJuvGTVZVKGL17nSDVoWz4xX67tc/export?format=xlsx" target="_blank" rel="noopener noreferrer" title="Download full spreadsheet">
+        Download Report (.xlsx)
+      </a>
+
+      <!-- Open Google Sheet -->
+      <a class="btn ghost" id="openSheet" href="https://docs.google.com/spreadsheets/d/1vP4wZd4hJ9rULHmAJuvGTVZVKGL17nSDVoWz4xX67tc/edit" target="_blank" rel="noopener noreferrer">Open Source Sheet</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div class="small">View</div>
+              <div class="tabs" id="tabs">
+                <!-- JS will populate -->
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Published</div>
+              <div id="lastUpdate" style="font-weight:600; margin-top:6px;">Live</div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="frame-wrap card" style="padding:0;">
+            <!-- iframe will show published sheet views -->
+            <iframe id="frame" src=""></iframe>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+            <div class="small">Data updates automatically when sheet updates.</div>
+            <div class="small">Made for Care-Pro</div>
+          </div>
+        </div>
+
+        <!-- optional data / notes card -->
+        <div class="card" style="margin-top:14px;">
+          <h3 style="margin:0 0 8px 0">Notes & Tips</h3>
+          <div class="small">
+            • Ensure each sheet is published to web (you already published).<br>
+            • If a tab shows blank, confirm correct gid for that sheet. <br>
+            • Download opens the full workbook as .xlsx.
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <div class="card">
+          <h3 style="margin-top:0">Quick Links</h3>
+          <div class="links" style="margin-top:8px">
+            <a href="#" id="linkSummary">Open Summary</a>
+            <a href="#" id="linkQ1">Open Quarter 1</a>
+            <a href="#" id="linkQ2">Open Quarter 2</a>
+            <a href="#" id="linkQ3">Open Quarter 3</a>
+            <a href="#" id="linkQ4">Open Quarter 4</a>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3 style="margin:0 0 8px 0">Theme</h3>
+          <div class="small">Light blue & gray — clean corporate look. Logo animates subtly to draw attention.</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    © Care-Pro • Dashboard — Public View
+  </footer>
+
+<script>
+  // === CONFIG (your published base and gids) ===
+  const publishedBase = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR2IabL0WlXzTma7pV4tiHE4uy2AUi_JcP5AFUxrO9ugB0L43AHKtam5wtCnFSGXStlhpTf2lkZ1TMK/pubhtml';
+  const gids = {
+    'Summary': '714147395',
+    'Q1': '304070629',
+    'Q2': '1447107603',
+    'Q3': '1505178600',
+    'Q4': '1825913837'
+  };
+
+  // view URLs with single=true to show one sheet/tab
+  function sheetUrlFor(gid){
+    return publishedBase + '?gid=' + gid + '&single=true';
+  }
+
+  // Populate tabs
+  const views = ['Summary','Q1','Q2','Q3','Q4'];
+  const tabsEl = document.getElementById('tabs');
+  let current = 'Summary';
+
+  views.forEach(v=>{
+    const b = document.createElement('button');
+    b.className = 'tab' + (v===current ? ' active' : '');
+    b.textContent = v === 'Q1' ? 'Quarter 1' : (v==='Q2' ? 'Quarter 2' : (v==='Q3' ? 'Quarter 3' : (v==='Q4' ? 'Quarter 4' : v)));
+    b.onclick = ()=>selectView(v);
+    tabsEl.appendChild(b);
+  });
+
+  // set quick links
+  document.getElementById('linkSummary').href = sheetUrlFor(gids.Summary);
+  document.getElementById('linkQ1').href = sheetUrlFor(gids.Q1);
+  document.getElementById('linkQ2').href = sheetUrlFor(gids.Q2);
+  document.getElementById('linkQ3').href = sheetUrlFor(gids.Q3);
+  document.getElementById('linkQ4').href = sheetUrlFor(gids.Q4);
+
+  // load iframe and toggle active class
+  function selectView(v){
+    current = v;
+    const all = document.querySelectorAll('.tabs .tab');
+    all.forEach(b => b.classList.toggle('active', b.textContent.replace('Quarter ','Q') === v || b.textContent === v));
+    const gid = gids[v];
+    document.getElementById('frame').src = sheetUrlFor(gid);
+    // update last update time display
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+  }
+
+  // initial load
+  selectView('Summary');
+
+  // Download button already points to export xlsx via anchor in header (Option A).
+  // If you want the download button to auto-download in the same tab, we could fetch and trigger blob download
+  // but opening in new tab is most reliable across browsers and for large files.
+</script>
+</body>
+</html>
